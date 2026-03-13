@@ -362,8 +362,10 @@ export const handleNodeEvent = async (ctx: NodeEventContext, nodeId: string, evt
       let images: Array<{ type: "image"; data: string; mimeType: string }> = [];
       if (normalizedAttachments.length > 0) {
         try {
+          const cfg = loadConfig();
+          const maxBytes = cfg.gateway?.webui?.attachmentMaxBytes ?? 5_000_000;
           const parsed = await parseMessageWithAttachments(message, normalizedAttachments, {
-            maxBytes: 5_000_000,
+            maxBytes,
             log: ctx.logGateway,
           });
           message = parsed.message.trim();
